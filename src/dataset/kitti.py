@@ -3,13 +3,23 @@ import glob
 import torch
 from torch.utils.data import Dataset
 import torchvision.transforms.functional as F
+import torchvision.transforms as T
 from PIL import Image
 
 
 class KITTI(Dataset):
     def __init__(
-        self, root: str, train: bool, transform=None, batch_transform=None
-    ) -> None:
+        self, root: str, train: bool, transform=T.ToTensor(), batch_transform=None
+    ):
+        """http://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=stereo \n
+        Use the script `src/dataset/preprocess` before creating objects from this class
+        
+        Args:
+            root (str): The directory containing the folders `image_left` and `image_right` and the additional folder `disp_occ_left` for training
+            train (bool): Whether the dataset is for training or for testing purpose
+            transform: Transformations done on the left and right images
+            batch_transform: Transformations done on the left and right images as well as on the left disparity image (used for applying the same crop)
+        """
         super().__init__()
         assert os.path.exists(root)
         self.root = root
@@ -52,9 +62,14 @@ class KITTI(Dataset):
 
 
 if __name__ == "__main__":
-    dataset = KITTI("dataset/training", train=True, transform=F.pil_to_tensor)
+    dataset = KITTI("dataset/training", train=True)
     print(f"Train dataset length: {len(dataset)}")
     left, right, disp = dataset[0]
     print(f"Left: {left.shape} {left.dtype}")
     print(f"Right: {right.shape} {right.dtype}")
     print(f"Disparity: {disp.shape} {disp.dtype}")
+    dataset = KITTI("dataset/testing", train=False)
+    print(f"Test dataset length: {len(dataset)}")
+    left, right = dataset[0]
+    print(f"Left: {left.shape} {left.dtype}")
+    print(f"Right: {right.shape} {right.dtype}")

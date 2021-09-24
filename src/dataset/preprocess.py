@@ -55,13 +55,9 @@ def preprocess(root: str, kitti_archive: str):
             shutil.copy(img_path, dest_dir)
 
 
-def main(args):
-    preprocess(args.root, args.kitti_archive)
-
-
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--root")
     parser.add_argument("--kitti-archive")
     args = parser.parse_args()
-    main(args)
+    preprocess(args.root, args.kitti_archive)

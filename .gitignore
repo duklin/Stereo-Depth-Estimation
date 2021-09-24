@@ -1,5 +1,5 @@
 .vscode/
 .ipynb_checkpoints/
 __pycache__/
-hyper_optim.db
+*.db
 Untitled*ipynb

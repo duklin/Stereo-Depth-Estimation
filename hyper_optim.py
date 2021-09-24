@@ -125,7 +125,7 @@ def objective(trial):
 
 
 if __name__ == "__main__":
-    study_name = "hyper_optim"
+    study_name = "SDE_hyper_optim"
     storage_name = "sqlite:///{}.db".format(study_name)
     study = optuna.create_study(
         study_name=study_name, storage=storage_name, directions=["minimize", "minimize"]
@@ -133,25 +133,8 @@ if __name__ == "__main__":
 
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    logger.addHandler(logging.FileHandler("hyper_optim.log", mode="w"))
+    logger.addHandler(logging.FileHandler("SDE_hyper_optim.log", mode="w"))
     optuna.logging.enable_propagation()
     optuna.logging.disable_default_handler()
 
     study.optimize(objective, n_trials=100)
-
-    pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
-    complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
-
-    print("Study statistics: ")
-    print("  Number of finished trials: ", len(study.trials))
-    print("  Number of pruned trials: ", len(pruned_trials))
-    print("  Number of complete trials: ", len(complete_trials))
-
-    print("Best trial:")
-    trial = study.best_trial
-
-    print("  Value: ", trial.value)
-
-    print("  Params: ")
-    for key, value in trial.params.items():
-        print("    {}: {}".format(key, value))

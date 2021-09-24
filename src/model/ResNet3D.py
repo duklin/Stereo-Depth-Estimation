@@ -45,6 +45,7 @@ class BasicBlock(nn.Module):
 
 class ResNet3D(nn.Module):
     def __init__(self, block_inplanes):
+        """Follows the ResNet-18 architecture having 4 layers with 2 Basic Blocks each"""
         super(ResNet3D, self).__init__()
         layers = [2, 2, 2, 2]  # ResNet 18
         self.in_planes = block_inplanes[0]

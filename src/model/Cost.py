@@ -4,6 +4,7 @@ import torch.nn as nn
 
 class Cost(nn.Module):
     def __init__(self):
+        """Calculate the cost volume by concatenating the features across channel dimension for each disparity level"""
         super(Cost, self).__init__()
         self.max_disparity = 192
 

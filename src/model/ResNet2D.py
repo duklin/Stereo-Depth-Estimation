@@ -60,7 +60,8 @@ class BasicBlock(nn.Module):
 
 
 class ResNet2D(nn.Module):
-    def __init__(self, block_inplanes: List[int]) -> None:
+    def __init__(self, block_inplanes: List[int]):
+        """Inspired by the ResNet-18 implementation from PyTorch. Adapted to serve as a feature extractor."""
         super(ResNet2D, self).__init__()
         layers = [2, 2, 2, 2]  # ResNet 18
         self.inplanes = block_inplanes[0]

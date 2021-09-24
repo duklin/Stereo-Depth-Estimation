@@ -6,11 +6,21 @@ from src.model.DisparityRegressor import DisparityRegressor
 
 
 class SDENet(nn.Module):
-    def __init__(self, resnet2d_inplanes, resnet3d_inplanes):
+    def __init__(self, resnet2d_inplanes: list, resnet3d_inplanes: list):
+        """The Stereo-Depth-Estimation Network contains 4 parts:
+            * ResNet2D - Siamese Residual CNN extracting features from left and right images
+            * Cost - The cost volume of the features
+            * ResNet3D - Used for extracting joined features from the cost volume
+            * Disparity regressor - Upsample and soft-regression
+        
+        Args:
+            resnet2d_inplanes (list): The number of input planes for the first three blocks for ResNet2D
+            resnet3d_inplanes (list): The number of input planes for the first three blocks for ResNet3D
+        """
         super(SDENet, self).__init__()
-        self.resnet18_2d = ResNet2D([*resnet2d_inplanes, 32])  # 64, 128, 64
+        self.resnet18_2d = ResNet2D([*resnet2d_inplanes, 32])
         self.cost = Cost()
-        self.resnet18_3d = ResNet3D([*resnet3d_inplanes, 1])  # 32, 64, 32
+        self.resnet18_3d = ResNet3D([*resnet3d_inplanes, 1])
         self.disp_regressor = DisparityRegressor()
 
     def forward(self, left, right):

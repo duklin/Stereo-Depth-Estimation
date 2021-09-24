@@ -5,6 +5,9 @@ import torch.nn.functional as F
 
 class DisparityRegressor(nn.Module):
     def __init__(self):
+        """Final part of the architecture.\n
+        Upsample the output feature map from the 3D CNN part by using trilinear interpolation.\n
+        Finally, perform soft-regression on the disparity values"""
         super().__init__()
         self.disp = torch.arange(192).view(1, 192, 1, 1)
 
