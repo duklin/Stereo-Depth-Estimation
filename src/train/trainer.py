@@ -1,3 +1,4 @@
+import os
 import torch
 import numpy as np
 from src.model.SDENet import SDENet
@@ -17,6 +18,7 @@ class Trainer:
         optimizer: Optimizer,
         device: str,
         writer: SummaryWriter,
+        ckp_dir: str,
     ) -> None:
         self.model = model
         self.train_loader = train_loader
@@ -25,13 +27,14 @@ class Trainer:
         self.optimizer = optimizer
         self.device = device
         self.writer = writer
+        self.ckp_dir = ckp_dir
 
     @torch.no_grad()
     def valid_step(self):
         losses = []
         errors = []
 
-        for i, (left, right, target) in enumerate(self.valid_loader):
+        for left, right, target in self.valid_loader:
             left = left.to(self.device)
             right = right.to(self.device)
             target = target.to(self.device)
@@ -52,7 +55,7 @@ class Trainer:
         losses = []
         errors = []
 
-        for i, (left, right, target) in enumerate(self.train_loader):
+        for left, right, target in self.train_loader:
             left = left.to(self.device)
             right = right.to(self.device)
             target = target.to(self.device)
@@ -84,4 +87,19 @@ class Trainer:
             valid_loss, valid_error = self.valid_step()
             self.writer.add_scalar("Loss/valid", valid_loss, global_step=i)
             self.writer.add_scalar("3P Error/valid", valid_error, global_step=i)
+
+            file_path = os.path.join(self.ckp_dir, f"{i}.pt")
+            torch.save(
+                {
+                    "state_dict": self.model.state_dict(),
+                    "epoch": i,
+                    "stats": {
+                        "train_loss": train_loss,
+                        "valid_loss": valid_loss,
+                        "train_error": train_error,
+                        "valid_error": valid_error,
+                    },
+                },
+                file_path,
+            )
 

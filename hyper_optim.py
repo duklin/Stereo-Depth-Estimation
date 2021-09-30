@@ -1,6 +1,5 @@
 import torch
 import optuna
-from optuna.trial import TrialState
 import logging
 import numpy as np
 import torch.optim as optim

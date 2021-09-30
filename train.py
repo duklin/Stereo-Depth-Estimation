@@ -1,5 +1,6 @@
 import datetime
 from argparse import ArgumentParser
+import os
 
 import torch
 import torch.optim
@@ -42,8 +43,12 @@ def main(args):
     train_loader = DataLoader(kitti_train, batch_size=args.batch_size, shuffle=True)
     valid_loader = DataLoader(kitti_val, batch_size=args.batch_size, shuffle=True)
 
-    log_dir = datetime.datetime.now().strftime("logs/%Y-%m-%d_%H-%M")
+    now = datetime.datetime.now()
+    log_dir = now.strftime("logs/%Y-%m-%d_%H-%M")
     writer = SummaryWriter(log_dir)
+
+    ckp_dir = now.strftime("checkpoints/%Y-%m-%d_%H-%M")
+    os.makedirs(ckp_dir)
 
     # visualize the network
     left, right, _ = next(iter(train_loader))
@@ -62,10 +67,9 @@ def main(args):
         optimizer=optimizer,
         device=args.device,
         writer=writer,
+        ckp_dir=ckp_dir,
     )
     trainer.train()
-
-    torch.save(sde_net, "model.pt")
 
     writer.close()
 

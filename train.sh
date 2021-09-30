@@ -1,3 +1,4 @@
+# parameters taken from the Hyperparameter Optimization process (trial #1)
 python train.py \
     --epochs 200 \
     --resnet2d-inplanes 32 40 39 \
