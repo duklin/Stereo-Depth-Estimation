@@ -8,10 +8,7 @@ from PIL import Image
 
 
 class KITTI(Dataset):
-    def __init__(
-        self, root: str, train: bool, transform=T.ToTensor(), batch_transform=None
-    ):
-        """http://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=stereo \n
+    """http://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=stereo \n
         Use the script `src/dataset/preprocess` before creating objects from this class
         
         Args:
@@ -20,6 +17,10 @@ class KITTI(Dataset):
             transform: Transformations done on the left and right images
             batch_transform: Transformations done on the left and right images as well as on the left disparity image (used for applying the same crop)
         """
+
+    def __init__(
+        self, root: str, train: bool, transform=T.ToTensor(), batch_transform=None
+    ):
         super().__init__()
         assert os.path.exists(root)
         self.root = root

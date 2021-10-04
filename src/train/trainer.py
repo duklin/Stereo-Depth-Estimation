@@ -9,6 +9,18 @@ from src.train.loss import smooth_l1, three_pe
 
 
 class Trainer:
+    """A trainer class for training the Stereo Depth Estimation model
+    
+    Args:
+        model (SDENet): An instance of the model to be trained
+        train_loader (DataLoader): A PyTorch DataLoader for the training dataset
+        valid_loader (DataLoader): A PyTorch DataLoader for the validation dataset
+        num_epochs (int): A number of epochs to train for
+        optimizer (Optimizer): A PyTorch Optimizer to be used in the training process [Adam, RMSProp or SGD]
+        device (str): The device used for training
+        writer (SummaryWriter): A TensorBoard SummaryWriter to write down the loss and error for each epoch
+        ckp_dir (str): Directory name to save the checkpoints from every epoch"""
+
     def __init__(
         self,
         model: SDENet,
@@ -19,7 +31,7 @@ class Trainer:
         device: str,
         writer: SummaryWriter,
         ckp_dir: str,
-    ) -> None:
+    ):
         self.model = model
         self.train_loader = train_loader
         self.valid_loader = valid_loader
@@ -80,13 +92,20 @@ class Trainer:
         for i in range(self.num_epochs):
             self.model.train()
             train_loss, train_error = self._train_step()
-            self.writer.add_scalar("Loss/train", train_loss, global_step=i)
-            self.writer.add_scalar("3P Error/train", train_error, global_step=i)
 
             self.model.eval()
             valid_loss, valid_error = self.valid_step()
-            self.writer.add_scalar("Loss/valid", valid_loss, global_step=i)
-            self.writer.add_scalar("3P Error/valid", valid_error, global_step=i)
+
+            self.writer.add_scalars(
+                "Smooth L1 Loss",
+                {"Training": train_loss, "Validation": valid_loss,},
+                global_step=i,
+            )
+            self.writer.add_scalars(
+                "Three Pixel Error",
+                {"Training": train_error, "Validation": valid_error,},
+                global_step=i,
+            )
 
             file_path = os.path.join(self.ckp_dir, f"{i}.pt")
             torch.save(
