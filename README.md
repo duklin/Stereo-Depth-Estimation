@@ -7,8 +7,8 @@ This project was done on Ubuntu 18.04 with NVIDIA Titan X (cuda 11.1)
 * `data_scene_flow.zip` Dataset which can be downloaded from [here](http://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=stereo)
 ## Running the project
 ```sh
-git clone https://github.com/duklin/Stereo-Depth-Estimation.git
-cd Stereo-Depth-Estimation
+git clone https://github.com/duklin/sde.git
+cd sde
 
 # download TensorBoard Logs and checkpoints
 wget --output-document logs_and_checkpoints.tar.gz https://uni-bonn.sciebo.de/s/GShVSpQ7wXsPkRL/download
